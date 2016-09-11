@@ -3,6 +3,9 @@ use std::io::{Read, Write};
 use std::env;
 use std::path::PathBuf;
 
+#[cfg(windows)]
+use windows;
+
 /// Like `println!` but for stderr.
 #[macro_export]
 macro_rules! println_stderr(
@@ -44,10 +47,51 @@ pub fn assert_status_ok(response: &mut HyperResponse) {
 #[cfg(windows)]
 pub fn home_dir() -> PathBuf {
     env::remove_var("HOME".to_string());
-    env::home_dir().expect("$USERPROFILE directory is not configured")
+    env::home_dir().expect("%USERPROFILE% directory is not configured")
+}
+
+#[cfg(windows)]
+pub fn puppetlabs_dir() -> PathBuf {
+    let mut path = windows::get_special_folder(&windows::FOLDERID_ProgramData).unwrap();
+    path.push("PuppetLabs");
+    return path;
 }
 
 #[cfg(not(windows))]
 pub fn home_dir() -> PathBuf {
     env::home_dir().expect("$HOME directory is not configured")
+}
+
+#[cfg(not(windows))]
+pub fn puppetlabs_dir() -> PathBuf {
+    PathBuf::from("/etc/puppetlabs")
+}
+
+pub fn global_client_tools_dir() -> PathBuf {
+    let mut path = puppetlabs_dir();
+    path.push("client-tools");
+    return path;
+}
+
+pub fn local_client_tools_dir() -> PathBuf {
+    let mut conf_dir = home_dir();
+    conf_dir.push(".puppetlabs");
+    conf_dir.push("client-tools");
+    return conf_dir;
+}
+
+pub trait NotEmpty<T> {
+    fn not_empty(self) -> T;
+}
+
+impl NotEmpty<Option<String>> for Option<String> {
+    fn not_empty(self) -> Option<String> {
+        self.and_then(|s| {
+            if s.is_empty() {
+                None
+            } else {
+                Some(s)
+            }
+        })
+    }
 }

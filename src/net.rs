@@ -121,3 +121,15 @@ impl Auth {
         }
     }
 }
+
+/// Checks whether the vector of urls contains a url that needs to use SSL, i.e.
+/// has `https` as the scheme.
+pub fn is_ssl(server_urls: &Vec<String>) -> bool {
+    server_urls.into_iter()
+        .any(|url| {
+            "https" ==
+                Url::parse(&url)
+                .unwrap_or_else(|e| pretty_panic!("Error parsing url {:?}: {}", url, e))
+                .scheme
+        })
+}
