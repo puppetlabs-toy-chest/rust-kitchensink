@@ -95,3 +95,26 @@ impl NotEmpty<Option<String>> for Option<String> {
         })
     }
 }
+
+#[cfg(windows)]
+pub fn default_certificate_file() -> String {
+    let mut path = puppetlabs_dir();
+    path.push("puppet");
+    path.push("ssl");
+    path.push("certs");
+    path.push("ca");
+    path.set_extension("pem");
+    path.to_str().unwrap().to_owned()
+}
+
+#[cfg(not(windows))]
+pub fn default_certificate_file() -> String {
+    let mut path = puppetlabs_dir();
+    path.push("puppet");
+    path.push("etc");
+    path.push("ssl");
+    path.push("certs");
+    path.push("ca");
+    path.set_extension("pem");
+    path.to_str().unwrap().to_owned()
+}
