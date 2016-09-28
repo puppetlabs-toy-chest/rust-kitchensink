@@ -1,6 +1,6 @@
 [package]
 name = "kitchensink"
-version = "0.2.1"
+version = "0.3.0"
 description = "Puppet utilities for Rust."
 readme = "README.md"
 documentation = "http://ajroetker.github.io/rust-kitchensink/index.html"
