@@ -45,7 +45,7 @@ mod tests {
         let temp_path = create_temp_path(&temp_dir, "testtoken");
         let path_str = temp_path.as_path().to_str().unwrap();
 
-        spit_token(path_str, "fkgjh95 ghdlfjgh").unwrap();
+        spit_token(path_str, "fkgjh95 ghdlfjgh   ").unwrap();
         assert_eq!("fkgjh95 ghdlfjgh", read_token(path_str.to_string().clone()).unwrap());
     }
 }

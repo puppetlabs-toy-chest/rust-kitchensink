@@ -25,3 +25,6 @@ userenv-sys = "0.2.0"
 [dependencies.openssl]
 version = "0.7"
 features = ["tlsv1_2"]
+
+[dev-dependencies]
+tempdir = "0.3"
