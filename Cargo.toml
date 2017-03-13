@@ -1,6 +1,6 @@
 [package]
 name = "kitchensink"
-version = "0.3.0"
+version = "0.4.0"
 description = "Puppet utilities for Rust."
 readme = "README.md"
 documentation = "http://ajroetker.github.io/rust-kitchensink/index.html"
@@ -10,8 +10,10 @@ keywords = ["puppet", "kitchensink", "utils", "utilities"]
 authors = ["Andrew Roetker <andrew.roetker@puppetlabs.com>"]
 
 [dependencies]
-hyper = "0.9.*"
-url = "1.2.*"
+hyper = "0.10"
+hyper-openssl = "0.2"
+url = "1.4"
+openssl-sys = "0.9"
 
 [target."cfg(windows)".dependencies]
 winapi = "0.2.4"
@@ -23,8 +25,8 @@ advapi32-sys = "0.2.0"
 userenv-sys = "0.2.0"
 
 [dependencies.openssl]
-version = "0.7"
-features = ["tlsv1_2"]
+version = "0.9"
+features = ["v102"]
 
 [dev-dependencies]
 tempdir = "0.3"
