@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate hyper;
+extern crate hyper_openssl;
 extern crate openssl;
+extern crate openssl_sys;
 extern crate url;
 
 #[cfg(windows)]
