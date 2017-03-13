@@ -1,7 +1,6 @@
-version: 0.4.0.{build}
+version: 0.4.1.{build}
 environment:
   OPENSSL_DIR: C:\OpenSSL
-  OPENSSL_LIBS: ssleay32:libeay32
   matrix:
   - TARGET: i686-pc-windows-gnu
     BITS: 32
