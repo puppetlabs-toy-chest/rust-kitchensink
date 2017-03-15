@@ -1,16 +1,33 @@
 use std::io::Write;
 use std::path::Path;
 
-use openssl::ssl::{SslContext, SslMethod};
+use openssl::ssl::{SslContext, Ssl, SslMethod, SslStream, SSL_VERIFY_PEER};
 use openssl::ssl::error::SslError;
 use openssl::x509::X509FileType;
 
-use hyper::net::{OpensslClient, HttpsConnector, Fresh};
+use openssl_verify;
+use hyper;
+
+use hyper::net::{HttpStream, HttpsConnector, Fresh};
 use hyper::method::Method;
 use hyper::client::{Client, RequestBuilder};
 use hyper::client::request::Request;
 
 use url::Url;
+
+pub struct OpensslClient(SslContext);
+
+impl hyper::net::SslClient for OpensslClient {
+    type Stream = SslStream<HttpStream>;
+
+    fn wrap_client(&self, stream: HttpStream, host: &str) -> hyper::error::Result<Self::Stream> {
+        let mut ssl = try!(Ssl::new(&self.0));
+        try!(ssl.set_hostname(host));
+        let host = host.to_owned();
+        ssl.set_verify_callback(SSL_VERIFY_PEER, move |p, x| openssl_verify::verify_callback(&host, p, x));
+        SslStream::connect(ssl, stream).map_err(From::from)
+    }
+}
 
 pub fn ssl_context<C>(cacert: C, cert: Option<C>, key: Option<C>) -> Result<OpensslClient, SslError>
     where C: AsRef<Path>
@@ -31,7 +48,7 @@ pub fn ssl_context<C>(cacert: C, cert: Option<C>, key: Option<C>) -> Result<Open
     if let Some(key) = key {
         try!(ctx.set_private_key_file(key.as_ref(), X509FileType::PEM));
     };
-    Ok(OpensslClient::new(ctx))
+    Ok(OpensslClient(ctx))
 }
 
 pub fn ssl_connector<C>(cacert: C, cert: Option<C>, key: Option<C>) -> HttpsConnector<OpensslClient>
