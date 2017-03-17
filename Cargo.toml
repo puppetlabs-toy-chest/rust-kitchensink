@@ -1,6 +1,6 @@
 [package]
 name = "kitchensink"
-version = "0.3.1"
+version = "0.3.2"
 description = "Puppet utilities for Rust."
 readme = "README.md"
 documentation = "http://ajroetker.github.io/rust-kitchensink/index.html"
@@ -11,7 +11,9 @@ authors = ["Andrew Roetker <andrew.roetker@puppetlabs.com>"]
 
 [dependencies]
 hyper = "0.9"
-url = "1.2"
+url = "1.4"
+log = "0.3"
+rustc-serialize = "0.3"
 
 [target."cfg(windows)".dependencies]
 winapi = "0.2.4"

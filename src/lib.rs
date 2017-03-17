@@ -3,6 +3,8 @@ extern crate hyper;
 extern crate openssl;
 extern crate openssl_verify;
 extern crate url;
+extern crate log as rust_log;
+extern crate rustc_serialize;
 
 #[cfg(windows)]
 extern crate winapi;
@@ -22,6 +24,7 @@ extern crate userenv;
 #[macro_use]pub mod utils;
 pub mod net;
 pub mod token;
+pub mod log;
 
 #[cfg(windows)]
 pub mod windows {
